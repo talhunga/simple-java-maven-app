@@ -21,3 +21,10 @@ jobs:
     - name: log in to docker hub
       run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }} && docker push ${{ secrets.DOCKERHUB_USERNAME }}/java-hello-world:${{ github.run_number }}
 
+    - name: deploy to ec2
+      run: |
+        echo ${{ secrets.KEY_PAIR }} > key.pem && chmod 600 key.pem 
+        ssh -o StrictHostKeyChecking=no -i "key.pem"  ubuntu@ec2-13-61-13-137.eu-north-1.compute.amazonaws.com '
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/java-hello-world:${{ github.run_number }}
+          docker run -d ${{ secrets.DOCKERHUB_USERNAME }}/java-hello-world:${{ github.run_number }}
+          '
