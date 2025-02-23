@@ -18,12 +18,15 @@ jobs:
     - name: build docker image
       run: docker build -t java-hello-world:${{ env.VERSION }} .
 
-    - name: save docker image as tar file
-      run: docker save -o java-hello-world-${{ env.VERSION }}.tar java-hello-world:${{ env.VERSION }}
-
-    - name: save image as artifact in github
-      uses: actions/upload-artifact@v4
+    - name: log in to docker hub
+      uses: docker/login-action
       with:
-        name: docker-image-${{ env.VERSION }}
-        path: java-hello-world-${{ env.VERSION }}.tar
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        passwords: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+         
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+       push: true
+        tags: java-hello-world:${{ env.VERSION }}
