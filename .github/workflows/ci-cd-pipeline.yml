@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest # the github hosted runner
     
     steps:
+    - name: fetch repository to runner
+      uses: actions/checkout@v4 #this action is fetching my repository to my guthub runner
+
     - name: setup jdk 17
       uses: actions/setup-java@v4
       with:
