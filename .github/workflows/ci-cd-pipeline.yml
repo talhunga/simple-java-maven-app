@@ -24,3 +24,9 @@ jobs:
     - name: build with maven
       run: mvn -B package --file pom.xml
 
+    - name: Upload JAR file as an artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: built-jar
+        path: target/*.jar
+
